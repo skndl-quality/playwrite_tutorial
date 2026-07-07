@@ -46,3 +46,18 @@ def test_locator_filter(page):
               .filter(has=page.get_by_role('button')).count())
     print(total4)
     page.pause()
+
+
+@pytest.mark.checkbox
+def test_locator_checkbox(page):
+    page.goto('https://zimaev.github.io/checks-radios/')
+    checkbox = page.locator('input')
+
+    # Функция range() генерирует ряд чисел в рамках заданного диапазона
+    for i in range(checkbox.count()):
+        checkbox.nth(i).click()
+    page.wait_for_timeout(2000)
+
+    for checkbox in checkbox.all():
+        checkbox.check()
+    page.wait_for_timeout(2000)
