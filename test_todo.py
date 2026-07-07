@@ -22,7 +22,7 @@ def test_navbar(page):
     page.locator("li").filter(has_text='Company').click() #ФИЛЬТРАЦИЯ ПО ТЕКСТУ
     page.wait_for_timeout(2000)
     page.locator("li").filter(has=page.locator('.dropdown-toggle')).click() #ФИЛЬТРАЦИЯ ПО ЛОКАТОРУ
-    page.pause()
+    # page.pause()
 
 
 @pytest.mark.filter
@@ -45,7 +45,6 @@ def test_filter(page):
               .filter(has_text="QA")
               .filter(has=page.get_by_role('button')).count())
     print(total4)
-    page.pause()
 
 
 @pytest.mark.checkbox
@@ -59,7 +58,7 @@ def test_checkbox(page):
     page.wait_for_timeout(2000)
 
     for checkbox in checkbox.all():
-        checkbox.check()
+        checkbox.check() # check включает чекбокс, кнопку и т.д., если чекбокс уже включен, он не выключится
     page.wait_for_timeout(2000)
 
 
@@ -70,3 +69,24 @@ def test_keyboard(page):
     page.wait_for_timeout(1000)
     page.locator(".mini-suggest__control").press("Enter") #нажатие на enter
     page.wait_for_timeout(5000)
+
+
+# выбор элемента в выпадающих списках
+@pytest.mark.select
+def test_select(page):
+    page.goto('https://zimaev.github.io/select/')
+
+    page.select_option("#floatingSelect", value="3")
+    page.wait_for_timeout(2000)
+
+    page.select_option("#floatingSelect", index=1)
+    page.wait_for_timeout(2000)
+
+    page.select_option("#floatingSelect", label="Нашел и завел bug")
+    page.wait_for_timeout(2000)
+
+    page.select_option("#floatingSelect", "3") #value по умолчанию
+    page.wait_for_timeout(2000)
+
+    page.select_option("#skills", value=['linux', 'python'])
+    page.wait_for_timeout(2000)
