@@ -61,3 +61,12 @@ def test_locator_checkbox(page):
     for checkbox in checkbox.all():
         checkbox.check()
     page.wait_for_timeout(2000)
+
+
+@pytest.mark.keyboard
+def test_locator_keyboard(page):
+    page.goto('https://ya.ru/?npr=1')
+    page.locator(".mini-suggest__control").type("собака", delay=300) #ввод символов с задержкой в 300мс
+    page.wait_for_timeout(1000)
+    page.locator(".mini-suggest__control").press("Enter") #нажатие на enter
+    page.wait_for_timeout(5000)
