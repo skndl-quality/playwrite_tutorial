@@ -2,9 +2,9 @@ from pydoc import pager
 
 import pytest
 
-
-@pytest.mark.locator
-def test_locator(page):
+# поиск локатора, который подходит по двум методам
+@pytest.mark.twomethod
+def test_two_method(page):
     page.goto(
         "https://zimaev.github.io/locatorand/")
     selector = page.get_by_role("button", name="Sing up").and_(page.get_by_title("Sing up today"))
@@ -12,10 +12,10 @@ def test_locator(page):
     page.pause()
 
 @pytest.mark.navbar
-def test_locator(page):
+def test_navbar(page):
     page.goto(
         "https://zimaev.github.io/navbar/")
-    page.locator("#navbarNavDropdown >> li:has-text('Company')").click()
+    page.locator("#navbarNavDropdown >> li:has-text('Company')").click() #наследование
     page.wait_for_timeout(2000)
     page.get_by_role("button", name="Company").click()
     page.wait_for_timeout(2000)
@@ -26,7 +26,7 @@ def test_locator(page):
 
 
 @pytest.mark.filter
-def test_locator_filter(page):
+def test_filter(page):
     page.goto('https://zimaev.github.io/filter/')
 
 # фильтрация по отсутствию роли в элемента
@@ -49,7 +49,7 @@ def test_locator_filter(page):
 
 
 @pytest.mark.checkbox
-def test_locator_checkbox(page):
+def test_checkbox(page):
     page.goto('https://zimaev.github.io/checks-radios/')
     checkbox = page.locator('input')
 
@@ -64,7 +64,7 @@ def test_locator_checkbox(page):
 
 
 @pytest.mark.keyboard
-def test_locator_keyboard(page):
+def test_keyboard(page):
     page.goto('https://ya.ru/?npr=1')
     page.locator(".mini-suggest__control").type("собака", delay=300) #ввод символов с задержкой в 300мс
     page.wait_for_timeout(1000)
