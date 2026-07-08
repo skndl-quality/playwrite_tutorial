@@ -153,3 +153,13 @@ def test_download(page):
 
     download.delete() # удаление временного файла
     os.remove(path_with_files) # удаление файла с директории
+
+# извлечение данных с веб странниц
+@pytest.mark.table
+def test_table(page):
+    page.goto('https://zimaev.github.io/table/')
+    row = page.locator('tr')
+    print(f'\n {row.all_text_contents()}')
+
+    print(f'\n {row.all_inner_texts()}')
+
