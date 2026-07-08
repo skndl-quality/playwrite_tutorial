@@ -163,3 +163,38 @@ def test_table(page):
 
     print(f'\n {row.all_inner_texts()}')
 
+# создание скриншотов
+@pytest.mark.screen
+def test_screen(page):
+    page.goto('https://demoqa.com/automation-practice-form')
+
+    page.screenshot(path='files/screen/screenshot.png', full_page=True) # скрин всей страницы
+    page.locator('.practice-form-wrapper').screenshot(path='files/screen/screen_element.png') # скрин элемента
+
+# Работа с несколькими вкладками
+@pytest.mark.tabs
+def test_tabs(page):
+    page.goto('https://zimaev.github.io/tabs/')
+    with page.context.expect_page() as tab: # Метод page.context.expect_page()  ожидает открытия новой вкладки.
+        page.get_by_text("Переход к Dashboard").click()
+
+    new_tab = tab.value
+# проверка, что мы перешли на ту страницу, которую ожидали. проверка URL и элемента
+    url_accept = new_tab.url == "https://zimaev.github.io/tabs/dashboard/index.html?"
+    sign_out = new_tab.locator(".nav-link", has_text="Sign out")
+    element_accept = sign_out.is_visible()
+# проверка на наличие урл и элемента
+    if url_accept is True:
+        print(Fore.GREEN + "\nurl правильный")
+    else:
+        print(Fore.RED + "\nurl неправильный")
+
+    if element_accept is True:
+        print(Fore.GREEN + "Элемент присутствует")
+    else:
+        print(Fore.RED + "Элемент отсутствует")
+
+# проверки можно было сделать по другому, через assert, но я не разобрался как выводить в консоль результаты
+    # assert new_tab.url == "https://zimaev.github.io/tabs/dashboard/index.html?"
+    # sign_out = new_tab.locator('.nav-link', has_text='Sign out')
+    # assert sign_out.is_visible()
