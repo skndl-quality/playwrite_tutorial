@@ -90,3 +90,41 @@ def test_select(page):
 
     page.select_option("#skills", value=['linux', 'python'])
     page.wait_for_timeout(2000)
+
+#drag and drop внутри страницы
+@pytest.mark.draganddrop
+def test_draganddrop(page):
+    page.goto('https://zimaev.github.io/draganddrop/')
+    page.drag_and_drop("#drag", "#drop")
+    page.wait_for_timeout(2000)
+    page.pause()
+
+# непонятная тема с диалоговыми окнами, нужна практика
+@pytest.mark.dialog
+def test_dialog(page):
+    page.goto('https://zimaev.github.io/dialog/')
+    page.on('dialog', lambda dialog: dialog.accept())
+    # page.on -  прослушивает события которые, происходит в приложении.
+    # 'dialog'  -  указывает на тип события которое нужно обработать
+    # lambda dialog: dialog.accept() - анонимная функция обрабатывающая событие.
+    page.get_by_text("Диалог Alert").click()
+    page.wait_for_timeout(2000)
+
+    page.on('dialog', lambda dialog: dialog.dismiss())
+    page.get_by_text("Диалог Confirmation").click()
+    page.wait_for_timeout(2000)
+
+    page.on('dialog', lambda dialog: dialog.dismiss())
+    page.on('dialog', lambda dialog: print(dialog.message))
+    page.get_by_text("Диалог Prompt").click()
+    page.wait_for_timeout(2000)
+
+# загрузка файлов
+@pytest.mark.upload
+def test_upload(page):
+    page.goto('https://zimaev.github.io/upload/')
+    page.set_input_files('#formFile', 'text.txt') # пишем метод, обращаемся к селектору и загружаем файл
+
+    page.on('filechooser', lambda filechooser: filechooser.set_files('text.txt')) # второй способ загрузки фала, через событие
+    page.locator('#formFile').click()
+    page.locator('#file-submit').click()
