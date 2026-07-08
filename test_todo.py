@@ -1,4 +1,7 @@
+import os
+from colorama import init, Fore, Back, Style
 from pydoc import pager
+from traceback import print_exc
 
 import pytest
 
@@ -61,7 +64,7 @@ def test_checkbox(page):
         checkbox.check() # check включает чекбокс, кнопку и т.д., если чекбокс уже включен, он не выключится
     page.wait_for_timeout(2000)
 
-
+# имитация нажатий на клавиаутру (вызов событий кнопок)
 @pytest.mark.keyboard
 def test_keyboard(page):
     page.goto('https://ya.ru/?npr=1')
@@ -123,8 +126,30 @@ def test_dialog(page):
 @pytest.mark.upload
 def test_upload(page):
     page.goto('https://zimaev.github.io/upload/')
-    page.set_input_files('#formFile', 'text.txt') # пишем метод, обращаемся к селектору и загружаем файл
+    page.set_input_files('#formFile', 'files/text.txt') # пишем метод, обращаемся к селектору и загружаем файл
 
-    page.on('filechooser', lambda filechooser: filechooser.set_files('text.txt')) # второй способ загрузки фала, через событие
+    page.on('filechooser', lambda filechooser: filechooser.set_files('files/text.txt')) # второй способ загрузки фала, через событие
     page.locator('#formFile').click()
     page.locator('#file-submit').click()
+
+# загрузка файла
+@pytest.mark.download
+def test_download(page):
+    page.goto('https://demoqa.com/upload-download')
+    # page.on('download', lambda download: print(download.path()))
+    # данный способ используется, если вы понятия не имеете, что инициирует загрузку
+
+    with page.expect_download() as download_info:
+        page.locator('#downloadButton').click()
+
+    download = download_info.value # получение объекта скачивания
+    file_name = download.suggested_filename # получение инфы о файле
+    destination_folder_path = './files/' # сохраняем путь в переменной
+    path_with_files = (os.path.join(destination_folder_path, file_name)) # сохраняем путь с именем файла в переменную
+    download.save_as(path_with_files) # сохраняем файл в пути
+
+    print(Fore.RED + "\nИмя файла: " + file_name)
+    print(Fore.RED + "Файл сохранен в : " + destination_folder_path)
+
+    download.delete() # удаление временного файла
+    os.remove(path_with_files) # удаление файла с директории
