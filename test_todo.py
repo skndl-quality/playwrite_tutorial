@@ -171,7 +171,7 @@ def test_screen(page):
     page.screenshot(path='files/screen/screenshot.png', full_page=True) # скрин всей страницы
     page.locator('.practice-form-wrapper').screenshot(path='files/screen/screen_element.png') # скрин элемента
 
-# Работа с несколькими вкладками
+    # Работа с несколькими вкладками
 @pytest.mark.tabs
 def test_tabs(page):
     page.goto('https://zimaev.github.io/tabs/')
